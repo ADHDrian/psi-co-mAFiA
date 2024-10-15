@@ -317,7 +317,7 @@ def mp_write(queue, config, args):
                 h_features.create_dataset(id, data=feat)
 
 
-if __name__ == "__main__":
+def main():
     tic = time.time()
 
     parser = argparse.ArgumentParser(description='Basecall fast5 files')
@@ -375,3 +375,7 @@ if __name__ == "__main__":
 
     toc = time.time()
     print('Finished in {:.1f} mins'.format((toc-tic)/60), flush=True)
+
+
+if __name__ == "__main__":
+    main()
