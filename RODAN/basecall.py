@@ -11,8 +11,8 @@ import os, sys, argparse, time, glob
 from fast_ctc_decode import beam_search, viterbi_search
 from ont_fast5_api.fast5_interface import get_fast5_file
 from torch.multiprocessing import Queue, Process
-from models import Objectview, Rodan
-import ont
+from RODAN.models import Objectview, Rodan
+from RODAN import ont
 import h5py
 from tqdm import tqdm
 
