@@ -68,3 +68,17 @@ process_reads \
 Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should match the reference that was used for the alignment in step 2. To exhaustively generate all the possible sites from a reference, we provide the script [WIP].
 
 The argument "num_jobs" is the number of parallel processes to run on the GPU. If you get an out-of-memory error, try to reduce the job number.
+
+Unless otherwise specified, the output bam file is called "mAFiA.reads.bam" in ${outdir}.
+
+## 4. mAFiA site-level prediction
+Finally, we can aggregate the single-read probabilities to predict site-level stoichiometry.
+```
+pileup \
+--bam_file ${outdir}/mAFiA.reads.bam \
+--sites ${sites} \
+--min_coverage 20 \
+--out_dir ${output} \
+--num_jobs 36
+```
+Here the input bam file should be the tagged bam generated in step 3. ""min_coverage" is the coverage cut-off for sites that should be considered. "num_jobs" are the number of cpu threads available on your computer. The output should be a bed file similar to ${sites}, but with the additional columns "coverage", "modRatio", "confidence".
