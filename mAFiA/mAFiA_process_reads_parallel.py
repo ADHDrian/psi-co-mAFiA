@@ -17,7 +17,7 @@ def process_bam(in_bam_file, out_sam_file, args):
     ivt_backbone = BackboneNetwork(args.backbone_model_path, args.extraction_layer, args.feature_width, args.batchsize)
     multimod_motif_classifiers = load_multimod_motif_classifiers(args.classifier_model_dir)
     sam_writer = SAMWriter(in_bam_path=in_bam_file, out_sam_path=out_sam_file)
-    df_mod = pd.read_csv(args.mod_file, sep='\t', dtype={'chrom': str, 'chromStart': int, 'chromEnd': int})
+    df_mod = pd.read_csv(args.sites, sep='\t', dtype={'chrom': str, 'chromStart': int, 'chromEnd': int})
     all_motifs = [motif for mod, motif_classifiers in multimod_motif_classifiers.items() for motif in motif_classifiers.keys()]
     df_mod_avail = df_mod[df_mod['ref5mer'].isin(all_motifs)]
     test_container.process_reads(ivt_backbone, df_mod_avail, multimod_motif_classifiers, sam_writer)
