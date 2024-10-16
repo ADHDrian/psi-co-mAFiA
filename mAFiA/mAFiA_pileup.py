@@ -77,7 +77,7 @@ def main():
         site_writer = SiteWriter(out_path=os.path.join(args.out_dir, args.out_filename))
     else:
         site_writer = SiteWriter(out_path=os.path.join(args.out_dir, 'mAFiA.sites.bed'))
-    df_mod = pd.read_csv(args.mod_file, sep='\t', dtype={'chrom': str, 'chromStart': int, 'chromEnd': int}, iterator=True, chunksize=args.chunk_size)
+    df_mod = pd.read_csv(args.sites, sep='\t', dtype={'chrom': str, 'chromStart': int, 'chromEnd': int}, iterator=True, chunksize=args.chunk_size)
 
     for chunk in df_mod:
         # if (chunk['chromStart'].values[0]<=bam_ref_max) and (chunk['chromEnd'].values[-1]>=bam_ref_min):
