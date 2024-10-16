@@ -5,54 +5,35 @@
 # (c) 2020,2021,2022 Don Neumann
 #
 
-import torch
+import argparse
+import glob
+import os
+import sys
+import time
+import h5py
 import numpy as np
-import os, sys, argparse, time, glob
+import torch
 from fast_ctc_decode import beam_search, viterbi_search
 from ont_fast5_api.fast5_interface import get_fast5_file
 from torch.multiprocessing import Queue, Process
-from RODAN.models import Objectview, Rodan
-from RODAN import ont
-import h5py
 from tqdm import tqdm
+from RODAN import ont
+from RODAN.models import Objectview, Rodan, get_rna_default
 
-vocab = { 1:"A", 2:"C", 3:"G", 4:"T" }
+vocab = {1: "A", 2: "C", 3: "G", 4: "T"}
 alphabet = "".join(["N"] + list(vocab.values()))
 alphabet_to_num = {v: k for k, v in enumerate(list(alphabet))}
+default_rnaarch = get_rna_default()
 
-default_rnaarch = [
-    [-1, 256, 0, 3, 1, 1, 0],
-    [-1, 256, 1, 10, 1, 1, 1],
-    [-1, 256, 1, 10, 10, 1, 1],
-    [-1, 320, 1, 10, 1, 1, 1],
-    [-1, 384, 1, 15, 1, 1, 1],
-    [-1, 448, 1, 20, 1, 1, 1],
-    [-1, 512, 1, 25, 1, 1, 1],
-    [-1, 512, 1, 30, 1, 1, 1],
-    [-1, 512, 1, 35, 1, 1, 1],
-    [-1, 512, 1, 40, 1, 1, 1],
-    [-1, 512, 1, 45, 1, 1, 1],
-    [-1, 512, 1, 50, 1, 1, 1],
-    [-1, 768, 1, 55, 1, 1, 1],
-    [-1, 768, 1, 60, 1, 1, 1],
-    [-1, 768, 1, 65, 1, 1, 1],
-    [-1, 768, 1, 70, 1, 1, 1],
-    [-1, 768, 1, 75, 1, 1, 1],
-    [-1, 768, 1, 80, 1, 1, 1],
-    [-1, 768, 1, 85, 1, 1, 1],
-    [-1, 768, 1, 90, 1, 1, 1],
-    [-1, 768, 1, 95, 1, 1, 1],
-    [-1, 768, 1, 100, 1, 1, 1]
-]
 
 def segment(seg, s):
-    seg = np.concatenate((seg, np.zeros((-len(seg)%s))))
-    nrows=((seg.size-s)//s)+1
-    n=seg.strides[0]
-    return np.lib.stride_tricks.as_strided(seg, shape=(nrows,s), strides=(s*n, n))
+    seg = np.concatenate((seg, np.zeros((-len(seg) % s))))
+    nrows = ((seg.size-s)//s)+1
+    n = seg.strides[0]
+    return np.lib.stride_tricks.as_strided(seg, shape=(nrows, s), strides=(s*n, n))
 
 
-def convert_statedict(state_dict):
+def convert_state_dict(state_dict):
     from collections import OrderedDict
     new_checkpoint = OrderedDict()
     for k, v in state_dict.items():
@@ -60,8 +41,11 @@ def convert_statedict(state_dict):
         new_checkpoint[name] = v
     return new_checkpoint
 
+
 activation = {}
-def load_model(modelfile, config = None, args = None):
+
+
+def load_model(modelfile, config=None, args=None):
     if modelfile is None:
         sys.stderr.write("No model file specified!")
         sys.exit(1)
@@ -74,7 +58,7 @@ def load_model(modelfile, config = None, args = None):
     if args.debug: print("Loading pretrained weights:", modelfile)
     state_dict = torch.load(modelfile, map_location=device)["state_dict"]
     if "state_dict" in state_dict:
-        model.load_state_dict(convert_statedict(state_dict["state_dict"]))
+        model.load_state_dict(convert_state_dict(state_dict["state_dict"]))
     else:
         model.load_state_dict(torch.load(modelfile, map_location=device)["state_dict"])
     if args.debug: print(model)
@@ -85,10 +69,8 @@ def load_model(modelfile, config = None, args = None):
         return hook
 
     model.get_submodule(args.extraction_layer).register_forward_hook(get_activation(args.extraction_layer))
-
     model.eval()
     torch.set_grad_enabled(False)
-
     return model, device
 
 
@@ -149,7 +131,7 @@ def mp_files(queue, config, args):
     queue.put(("end", None))
 
 
-def get_base_probs_and_activations(in_event, in_model, in_device):
+def get_base_probs_and_activations(in_event, in_model, in_device, args):
     base_probs = in_model.forward(in_event)
     layer_activation = activation[args.extraction_layer]
     return base_probs, layer_activation
@@ -177,7 +159,7 @@ def mp_gpu(inqueue, outqueue, config, args):
             event = torch.unsqueeze(torch.FloatTensor(chunks[i:end]), 1).to(device, non_blocking=True)
 
             if args.dump_features:
-                out, activations = get_base_probs_and_activations(event, model, device)
+                out, activations = get_base_probs_and_activations(event, model, device, args)
             else:
                 out = model.forward(event)
 
@@ -206,7 +188,7 @@ def mp_gpu(inqueue, outqueue, config, args):
             del logitspre
 
 
-def get_basecall_and_features(in_base_probs, layer_activation=None, dump_features=False):
+def get_basecall_and_features(in_base_probs, args, layer_activation=None, dump_features=False):
     if args.decoder == 'beam':
         decoder = beam_search
     elif args.decoder == 'viterbi':
@@ -289,7 +271,7 @@ def mp_write(queue, config, args):
                         actichunk = activations[:, :totlen, :]
                     else:
                         actichunk = None
-                    seq, features = get_basecall_and_features(callchunk, actichunk, args.dump_features)
+                    seq, features = get_basecall_and_features(callchunk, args, actichunk, args.dump_features)
 
                     readid = os.path.splitext(os.path.basename(files[0]))[0]
                     h_basecall.write(">" + readid + "\n")
@@ -341,22 +323,23 @@ def main():
 
     os.makedirs(args.outdir, exist_ok=True)
 
-    torchdict = torch.load(args.model, map_location="cpu")
-    origconfig = torchdict["config"]
+    torch_dict = torch.load(args.model, map_location="cpu")
+    orig_config = torch_dict["config"]
 
     if args.debug:
-        print(origconfig)
-    origconfig["debug"] = args.debug
-    config = Objectview(origconfig)
+        print(orig_config)
+    orig_config["debug"] = args.debug
+    config = Objectview(orig_config)
     config.batchsize = args.batchsize
 
-    if args.arch != None:
+    if args.arch is not None:
         if args.debug: print("Loading architecture from:", args.arch)
         args.arch = eval(open(args.arch, "r").read())
     else:
         args.arch = default_rnaarch
 
-    if args.debug: print("Using sequence len:", int(config.seqlen))
+    if args.debug:
+        print("Using sequence len:", int(config.seqlen))
     
     torch.backends.cudnn.enabled = True
     torch.backends.cudnn.deterministic = True
