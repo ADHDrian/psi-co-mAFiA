@@ -226,7 +226,7 @@ class Rodan(nn.Module):
         self.seqlen = config.seqlen
         self.vocab = config.vocab
         self.bn = nn.BatchNorm1d
-        arch = get_rna_default if arch is None else arch
+        arch = get_rna_default() if arch is None else arch
 
         activation = Activation_Function(config.activation.lower())
         sqex_activation = Activation_Function(config.sqex_activation.lower())
