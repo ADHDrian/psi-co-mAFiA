@@ -1,5 +1,4 @@
 import os
-HOME = os.path.expanduser('~')
 from glob import glob
 import numpy as np
 import random
@@ -11,7 +10,6 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler, MaxAbsScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_curve, auc
-import matplotlib.pyplot as plt
 import pickle
 
 
@@ -78,6 +76,8 @@ class MotifClassifier:
             pickle.dump(self, h_out, pickle.HIGHEST_PROTOCOL)
 
         if draw_prc:
+            import matplotlib.pyplot as plt
+
             out_img_path = out_model_path.replace('.pkl', '.png')
             plt.figure(figsize=(5, 5))
             plt.plot(self.recall, self.precision, '-')
