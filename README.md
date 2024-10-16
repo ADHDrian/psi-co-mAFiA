@@ -65,6 +65,6 @@ process_reads \
 --batchsize 128 \
 --out_dir ${output}
 ```
-Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. To exhaustively generate all the possible sites on a reference, we provide the script [WIP].
+Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should match the reference that was used for the alignment in step 2. To exhaustively generate all the possible sites from a reference, we provide the script [WIP].
 
 The argument "num_jobs" is the number of parallel processes to run on the GPU. If you get an out-of-memory error, try to reduce the job number.
