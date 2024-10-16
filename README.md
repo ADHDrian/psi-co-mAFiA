@@ -66,3 +66,5 @@ process_reads \
 --out_dir ${output}
 ```
 Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. To exhaustively generate all the possible sites on a reference, we provide the script [WIP].
+
+The argument "num_jobs" is the number of parallel processes to run on the GPU. If you get an out-of-memory error, try to reduce the job number.
