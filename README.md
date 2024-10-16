@@ -6,7 +6,7 @@ Here we provide a brief walkthrough to run mAFiA, using the example of chromosom
 - The following steps are tested with **python 3.9**.
   Get code and activate virtual environment, e.g.:
 ```
-git clone https://github.com/dieterich-lab/mAFiA.git
+git clone git@github.com:ADHDrian/psi-co-mAFiA.git
 cd psi-co-mAFiA
 python3 -m venv mafia-venv
 source mafia-venv/bin/activate
