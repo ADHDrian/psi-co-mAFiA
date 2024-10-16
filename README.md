@@ -24,19 +24,45 @@ ${mafia} will be your repo path.
     - The folder "data" contains a subset of input data on chrX:
         - fast5_chrX: dRNA-Seq raw data from HEK293 WT mRNA
 - Assume that data is unzipped to ${data} respectively. Your output directory is ${output}
-```
-backbone="${mafia}/models/RODAN_HEK293_IVT.torch"
-classifiers="${mafia}/models/psi-co-mAFiA"
-fast5dir="${data}/fast5_chrX"
-```
+
 
 ## 1. Basecalling
-The basecalling script is adapted from the [RODAN](https://github.com/biodlab/RODAN) repository. Assume that ${mafia} is your code directory.
+The basecalling script is adapted from the [RODAN](https://github.com/biodlab/RODAN) repository.
 ```
-python3 ${mafia}/RODAN/basecall.py \
+fast5dir="${data}/fast5_chrX"
+backbone="${mafia}/models/RODAN_HEK293_IVT.torch"
+
+basecall \
 --fast5dir ${fast5dir} \
 --model ${backbone} \
 --batchsize 4096 \
 --outdir ${output}
 ```
-On a reasonably modern GPU machine, this step should take less than 30 mins.
+On a reasonably modern GPU machine, this step should take less than 30 mins. Unless otherwise specified, basecalling results will be written to "${output}/rodan.fasta"
+
+## 2. Alignment
+Align basecalling results to a reference genome (eg, GRCh38_102.fasta). Filter, sort, and index BAM file.
+```
+minimap2 --secondary=no -ax splice -uf -k14 -t 36 --cs ${ref} ${basecall} \
+| samtools view -bST ${ref} -q50 - \
+| samtools sort - > ${bam}
+
+samtools index ${bam}
+```
+
+## 3. mAFiA read-level prediction
+After the standard procedures, we can now predict modification probabilities of single nucleotides on each read.
+```
+classifiers="${mafia}/models/psi-co-mAFiA"
+
+process_reads \
+--bam_file ${bam} \
+--fast5_dir ${fast5_dir} \
+--sites ${sites} \
+--backbone_model_path ${backbone} \
+--classifier_model_dir ${classifiers} \
+--num_jobs 4 \
+--batchsize 128 \
+--out_dir ${output}
+```
+Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. To exhaustively generate all the possible sites on a reference, we provide the script [WIP].
