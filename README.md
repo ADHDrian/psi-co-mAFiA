@@ -1,6 +1,6 @@
 # Ψ-co-mAFiA
 
-Here we provide a brief walkthrough of the software using dRNA reads aligned to a single transcript.
+Here we provide a brief walkthrough of the software using a toy example.
 
 ## 0. Preliminary
 Note: The following steps are tested with **python 3.9**.
