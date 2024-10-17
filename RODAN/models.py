@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 
 
-def get_rna_default():
+def get_default_rna_arch():
     rna_arch = [
         [-1, 256, 0, 3, 1, 1, 0],
         [-1, 256, 1, 10, 1, 1, 1],
@@ -39,7 +39,7 @@ def get_rna_default():
     return rna_arch
 
 
-def get_dna_default():
+def get_default_dna_arch():
     dna_arch = [
         [-1, 320, 0, 3, 1, 1, 0],
         [-1, 320, 1, 3, 3, 1, 1],
@@ -57,8 +57,8 @@ def get_dna_default():
     return dna_arch
 
 
-rna_default = get_rna_default()
-dna_default = get_dna_default()
+rna_default = get_default_rna_arch()
+dna_default = get_default_dna_arch()
 
 
 class Objectview(object):
@@ -226,7 +226,7 @@ class Rodan(nn.Module):
         self.seqlen = config.seqlen
         self.vocab = config.vocab
         self.bn = nn.BatchNorm1d
-        arch = get_rna_default() if arch is None else arch
+        arch = get_default_rna_arch() if arch is None else arch
 
         activation = Activation_Function(config.activation.lower())
         sqex_activation = Activation_Function(config.sqex_activation.lower())

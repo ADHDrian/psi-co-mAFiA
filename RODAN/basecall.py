@@ -18,12 +18,12 @@ from ont_fast5_api.fast5_interface import get_fast5_file
 from torch.multiprocessing import Queue, Process
 from tqdm import tqdm
 from RODAN import ont
-from RODAN.models import Objectview, Rodan, get_rna_default
+from RODAN.models import Objectview, Rodan, get_default_rna_arch
 
 vocab = {1: "A", 2: "C", 3: "G", 4: "T"}
 alphabet = "".join(["N"] + list(vocab.values()))
 alphabet_to_num = {v: k for k, v in enumerate(list(alphabet))}
-default_rnaarch = get_rna_default()
+default_rnaarch = get_default_rna_arch()
 
 
 def segment(seg, s):
