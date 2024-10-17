@@ -71,7 +71,7 @@ process_reads \
 On a Turing GPU, this step should finish within 3 minutes.
 
 Among the input arguments,
-- `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the command `generate_sites` (see ##5 below).
+- `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the command `generate_sites` (see [step 5](https://github.com/ADHDrian/psi-co-mAFiA/edit/main/README.md#5-generate-annotation-from-reference) below).
 - `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
 
 Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`. It contains the MM / ML tags that conform to the modBAM standard. m<sup>6</sup>A and Ψ are represented by the ChEBI codes `21891` and `17802` respectively.
