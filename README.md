@@ -116,5 +116,5 @@ This will produce bed files covering all contigs in the reference, for both modi
 To limit the output to a subset of contigs, give the additional argument
 `--chroms 1,2,3` for example.
 
-To limit to only one mod,
+To limit to only one mod, give
 `--mods m6A` or `--mods psi`.
