@@ -23,6 +23,7 @@ dependencies = [
 basecall = 'RODAN.basecall:main'
 process_reads = 'mAFiA.mAFiA_process_reads_parallel:main'
 pileup = 'mAFiA.mAFiA_pileup:main'
+generate_sites = 'utils.generate_mod_sites_from_ref:main'
 
 [tool.setuptools.packages.find]
 include = ["mAFiA", "RODAN"]
