@@ -105,7 +105,7 @@ For high-precision measurements, we recommend a minimum coverage of 50 and confi
 The expected outputs of the entire workflow can be found in `${mafia}/example_data/output`.
 
 ## 5. Generate annotation from reference
-To generate bed files as input to steps 3 and 4, do
+To generate your own bed files as input to steps 3 and 4, do
 ```
 generate_sites \
 --ref_file ${ref} \
