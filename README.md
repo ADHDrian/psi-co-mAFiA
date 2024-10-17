@@ -1,10 +1,11 @@
-# psi-co-mAFiA
+# Ψ-co-mAFiA
 
-Here we provide a brief walkthrough to run mAFiA, using the example of chromosome X.
+Here we provide a brief walkthrough of the software using dRNA reads aligned to a single transcript.
 
 ## 0. Preliminary
-- The following steps are tested with **python 3.9**.
-  Get code and activate virtual environment, e.g.:
+Note: The following steps are tested with **python 3.9**.
+
+Get code and activate virtual environment:
 ```
 git clone git@github.com:ADHDrian/psi-co-mAFiA.git
 cd psi-co-mAFiA
@@ -19,41 +20,43 @@ Install package
 ```
 pip install -e .
 ```
-${mafia} will be your repo path.
-- Download data from [here](https://zenodo.org/record/8321727)
-    - The folder "data" contains a subset of input data on chrX:
-        - fast5_chrX: dRNA-Seq raw data from HEK293 WT mRNA
-- Assume that data is unzipped to ${data} respectively. Your output directory is ${output}
+`${mafia}` will be your repo path.
+Example data is provided in `${mafia}/example_data/input`, where
+- `fast5_HSPA1A` contains a single fast5 file with reads covering <script>HSPA1A</script>
+- `HSPA1A.bed` annotates the possible m<sup>6</sup>A and Ψ sites in this region 
 
 
 ## 1. Basecalling
-The basecalling script is adapted from the [RODAN](https://github.com/biodlab/RODAN) repository.
+The basecaller is adapted from the [RODAN](https://github.com/biodlab/RODAN) repository.
 ```
-fast5dir="${data}/fast5_chrX"
+fast5_dir="${mafia}/example_data/input/fast5_HSPA1A"
 backbone="${mafia}/models/RODAN_HEK293_IVT.torch"
 
 basecall \
---fast5dir ${fast5dir} \
+--fast5_dir ${fast5_dir} \
 --model ${backbone} \
 --batchsize 4096 \
---outdir ${output}
+--out_dir ${out_dir}
 ```
-On a reasonably modern GPU machine, this step should take less than 30 mins. Unless otherwise specified, basecalling results will be written to "${output}/rodan.fasta"
+Basecalling results will be written to `${out_dir}/rodan.fasta`
 
 ## 2. Alignment
-Align basecalling results to a reference genome (eg, GRCh38_102.fasta). Filter, sort, and index BAM file.
+Align basecalling results to a reference genome `${ref}` (eg, GRCh38_102.fasta). Filter, sort, and index BAM file.
 ```
-minimap2 --secondary=no -ax splice -uf -k14 -t 36 --cs ${ref} ${basecall} \
+bam="${out_dir}/aligned.bam"
+
+minimap2 --secondary=no -ax splice -uf -k14 -t 36 --cs ${ref} ${out_dir}/rodan.fasta \
 | samtools view -bST ${ref} -q50 - \
 | samtools sort - > ${bam}
 
 samtools index ${bam}
 ```
 
-## 3. mAFiA read-level prediction
+## 3. Ψ-co-mAFiA read-level prediction
 After the standard procedures, we can now predict modification probabilities of single nucleotides on each read.
 ```
 classifiers="${mafia}/models/psi-co-mAFiA"
+sites="${mafia}/example_data/input/HSPA1A.bed"
 
 process_reads \
 --bam_file ${bam} \
@@ -63,22 +66,29 @@ process_reads \
 --classifier_model_dir ${classifiers} \
 --num_jobs 4 \
 --batchsize 128 \
---out_dir ${output}
+--out_dir ${out_dir}
 ```
-Here ${sites} is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should match the reference that was used for the alignment in step 2. To exhaustively generate all the possible sites from a reference, we provide the script [WIP].
+Here `${sites}` is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the script [WIP].
 
-The argument "num_jobs" is the number of parallel processes to run on the GPU. If you get an out-of-memory error, try to reduce the job number.
+The argument `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
 
-Unless otherwise specified, the output bam file is called "mAFiA.reads.bam" in ${outdir}.
+Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`.
 
-## 4. mAFiA site-level prediction
+## 4. Site-level prediction
 Finally, we can aggregate the single-read probabilities to predict site-level stoichiometry.
 ```
 pileup \
---bam_file ${outdir}/mAFiA.reads.bam \
+--bam_file ${out_dir}/mAFiA.reads.bam \
 --sites ${sites} \
 --min_coverage 20 \
---out_dir ${output} \
+--out_dir ${out_dir} \
 --num_jobs 36
 ```
-Here the input bam file should be the tagged bam generated in step 3. ""min_coverage" is the coverage cut-off for sites that should be considered. "num_jobs" are the number of cpu threads available on your computer. The output should be a bed file similar to ${sites}, but with the additional columns "coverage", "modRatio", "confidence".
+Here the input bam file should be the tagged bam generated in step 3. `--min_coverage` is the coverage cut-off for sites that should be considered for calculation. `--num_jobs` is the number of CPU threads available on your computer. The output is written to `${out_dir}/mAFiA.sites.bed`. It should be a bed file similar to `${sites}`, but with the additional columns
+- `coverage`: Number of reads covering the specific site
+- `modRatio`: Ratio of single nucleotides at the site with modification probability ≥0.5
+- `confidence`: Ratio of single nucleotides at the site with modification probability ≥0.75 or <0.25.
+
+For high-precision measurements, we recommend a minimum coverage of 50 and confidence of 80%.
+
+The expected outputs of the entire workflow can be found in `${mafia}/example_data/output`.
