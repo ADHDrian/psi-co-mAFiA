@@ -2,9 +2,9 @@
 
 Here we provide a brief walkthrough of the software using a toy example.
 
-## 0. Preliminary
 Note: The following steps are tested with **python 3.9**.
 
+## 0. Preliminary
 Get code and activate virtual environment:
 ```
 git clone git@github.com:ADHDrian/psi-co-mAFiA.git
