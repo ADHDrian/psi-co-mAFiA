@@ -74,7 +74,16 @@ Among the input arguments,
 - `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the script [WIP].
 - `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
 
-Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`.
+Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`. It contains the MM / ML tags that conform to the modBAM standard. m<sup>6</sup>A and Ψ are represented by the ChEBI codes `21891` and `17802` respectively.
+
+The modifications can be visualized in genome viewers such as [IGV](https://igv.org/). However, as of version 2.17.4, the viewer does not support RNA modifications and will treat all such tags as "Other". To display them with user-defined colors, one needs to relabel them as DNA modifications instead. For example,
+```
+samtools view -h ${out_dir}/mAFiA.reads.bam | sed -e 's/N+21891/N+a/g' | sed -e 's/N-21891/N-a/g' | samtools view -o ${out_dir}/relabelled.mAFiA.reads.bam
+samtools index ${out_dir}/relabelled.mAFiA.reads.bam
+```
+will recast all m<sup>6</sup>A tags as 6mA. The resulting visualization would look like this:
+
+![alt text](https://github.com/ADHDrian/psi-co-mAFiA/blob/main/example_data/igv_snapshot.png)
 
 ## 4. Site-level prediction
 Finally, we can aggregate the single-read probabilities to predict site-level stoichiometry.
