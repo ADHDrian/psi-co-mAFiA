@@ -75,7 +75,7 @@ def load_model(modelfile, config=None, args=None):
 
 
 def mp_files(queue, config, args):
-    dir = args.fast5dir
+    dir = args.fast5_dir
     if args.list_filenames is None:
         list_files = list(glob.iglob(dir+"/**/*.fast5", recursive=True))
     else:
@@ -245,7 +245,7 @@ def mp_write(queue, config, args):
     finish = False
 
     read_features = {}
-    with open(os.path.join(args.outdir, f'rodan.fasta'), 'w') as h_basecall:
+    with open(os.path.join(args.out_dir, f'rodan.fasta'), 'w') as h_basecall:
         while True:
             if queue.qsize() > 0:
                 newchunk = queue.get()
@@ -294,7 +294,7 @@ def mp_write(queue, config, args):
 
     if args.dump_features:
         print('Now dumping features...')
-        with h5py.File(os.path.join(args.outdir, f'features.h5'), 'w') as h_features:
+        with h5py.File(os.path.join(args.out_dir, f'features.h5'), 'w') as h_features:
             for id, feat in tqdm(read_features.items()):
                 h_features.create_dataset(id, data=feat)
 
@@ -303,8 +303,8 @@ def main():
     tic = time.time()
 
     parser = argparse.ArgumentParser(description='Basecall fast5 files')
-    parser.add_argument("--fast5dir", default=None, type=str)
-    parser.add_argument("--outdir", type=str)
+    parser.add_argument("--fast5_dir", default=None, type=str)
+    parser.add_argument("--out_dir", type=str)
     parser.add_argument("--list_filenames", default=None)
     parser.add_argument("-a", "--arch", default=None, type=str, help="architecture settings")
     parser.add_argument("-m", "--model", default="rna.torch", type=str, help="default: rna.torch")
@@ -321,7 +321,7 @@ def main():
 
     print('Running RODAN basecaller', flush=True)
 
-    os.makedirs(args.outdir, exist_ok=True)
+    os.makedirs(args.out_dir, exist_ok=True)
 
     torch_dict = torch.load(args.model, map_location="cpu")
     orig_config = torch_dict["config"]
