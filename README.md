@@ -22,7 +22,7 @@ pip install -e .
 ```
 `${mafia}` will be your repo path.
 Example data is provided in `${mafia}/example_data/input`, where
-- `fast5_HSPA1A` contains a single fast5 file with reads covering <script>HSPA1A</script>
+- `fast5_HSPA1A` contains a single fast5 file with reads covering <em>HSPA1A</em>
 - `HSPA1A.bed` annotates the possible m<sup>6</sup>A and Ψ sites in this region 
 
 
