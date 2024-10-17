@@ -114,7 +114,7 @@ generate_sites \
 This will produce bed files covering all contigs in the reference, for both modifications m<sup>6</sup>A and Ψ.
 
 To limit the output to a subset of contigs, give the additional argument
-`--chroms 1,2,3`
+`--chroms 1,2,3` for example.
 
 To limit to only one mod,
-`--mods m6A`
+`--mods m6A` or `--mods psi`.
