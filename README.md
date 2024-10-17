@@ -95,7 +95,7 @@ pileup \
 --out_dir ${out_dir} \
 --num_jobs 36
 ```
-Here the input bam file should be the tagged bam generated in step 3. `--min_coverage` is the coverage cut-off for sites that should be considered for calculation. `--num_jobs` is the number of CPU threads available on your computer. The output is written to `${out_dir}/mAFiA.sites.bed`. It should be a bed file similar to `${sites}`, but with the additional columns
+Here the input bam file should be the modBAM generated in step 3. `--min_coverage` is the coverage cut-off for sites that should be considered for calculation. `--num_jobs` is the number of CPU threads available on your computer. The output is written to `${out_dir}/mAFiA.sites.bed`. It should be a bed file similar to `${sites}`, but with the additional columns
 - `coverage`: Number of reads covering the specific site
 - `modRatio`: Ratio of single nucleotides at the site with modification probability ≥0.5
 - `confidence`: Ratio of single nucleotides at the site with modification probability ≥0.75 or <0.25.
