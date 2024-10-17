@@ -52,7 +52,7 @@ minimap2 --secondary=no -ax splice -uf -k14 -t 36 --cs ${ref} ${out_dir}/rodan.f
 samtools index ${bam}
 ```
 
-## 3. Ψ-co-mAFiA read-level prediction
+## 3. Read-level prediction
 After the standard procedures, we can now predict modification probabilities of single nucleotides on each read.
 ```
 classifiers="${mafia}/models/psi-co-mAFiA"
