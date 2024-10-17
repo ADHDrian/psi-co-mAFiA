@@ -68,9 +68,11 @@ process_reads \
 --batchsize 128 \
 --out_dir ${out_dir}
 ```
-Here `${sites}` is a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the script [WIP].
+On a Turing GPU, this step should finish within 3 minutes.
 
-The argument `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
+Among the input arguments,
+- `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the script [WIP].
+- `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
 
 Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`.
 
