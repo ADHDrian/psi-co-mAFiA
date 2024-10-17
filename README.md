@@ -71,7 +71,7 @@ process_reads \
 On a Turing GPU, this step should finish within 3 minutes.
 
 Among the input arguments,
-- `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the script [WIP].
+- `--sites` points to a bed file specifying the genome / transcriptome coordinates where predictions should be performed. It should correspond to the reference that was used for the alignment in step 2. To exhaustively generate all possible sites covered by the models, we provide the command `generate_sites` (see ##5 below).
 - `--num_jobs` is the number of parallel processes to run on the GPU. If you get a CUDA out-of-memory error, try to reduce the job number.
 
 Unless otherwise specified, the output bam file will be called `mAFiA.reads.bam` in `${out_dir}`. It contains the MM / ML tags that conform to the modBAM standard. m<sup>6</sup>A and Ψ are represented by the ChEBI codes `21891` and `17802` respectively.
@@ -103,3 +103,18 @@ Here the input bam file should be the modBAM generated in step 3. `--min_coverag
 For high-precision measurements, we recommend a minimum coverage of 50 and confidence of 80%.
 
 The expected outputs of the entire workflow can be found in `${mafia}/example_data/output`.
+
+## 5. Generate annotation from reference
+To generate bed files as input to steps 3 and 4, do
+```
+generate_sites \
+--ref_file ${ref} \
+--out_dir ${annot_dir}
+```
+This will produce bed files covering all contigs in the reference, for both modifications m<sup>6</sup>A and Ψ.
+
+To limit the output to a subset of contigs, give the additional argument
+`--chroms 1,2,3`
+
+To limit to only one mod,
+`--mods m6A`
