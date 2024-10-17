@@ -83,8 +83,8 @@ parser = argparse.ArgumentParser(
     prog='Mod sites generator',
     description='Given an input reference and modification types, generate bed file annotating all possible sites',
 )
-parser.add_argument('--ref_file')
-parser.add_argument('--out_dir')
+parser.add_argument('--ref_file', required=True)
+parser.add_argument('--out_dir', required=True)
 parser.add_argument('--chroms', default=None, help='chromosomes to include from reference, comma-separated')
 parser.add_argument('--mods', default=None, help='mods to include, {m6A,psi},  comma-separated')
 parser.add_argument('--out_prefix', default=None)
