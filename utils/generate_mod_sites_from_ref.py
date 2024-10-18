@@ -127,7 +127,8 @@ def main():
         seq_revcomp = str(Seq(ref[this_chrom]).reverse_complement())
         seq_len = len(seq_forward)
         chromStart_name_strand_ref5mer = []
-        for this_mod, this_mod_motifs in mod_motifs.items():
+        for this_mod in all_mods:
+            this_mod_motifs = mod_motifs[this_mod]
             for this_motif in this_mod_motifs:
                 for this_match in re.finditer(this_motif, seq_forward):
                     chromStart_name_strand_ref5mer.append((this_match.start()+2, this_mod, '+', this_motif))
