@@ -1,4 +1,26 @@
 # Ψ-co-mAFiA
+The prototype [mAFiA](https://github.com/dieterich-lab/mAFiA) is now expanded to include all 18 m<sup>6</sup>A DRACH as well as 16 high-frequency Ψ motifs:
+
+| m<sup>6</sup>A  | Ψ |
+| ------------- | ------------- |
+| GGACU | GGUGG |
+| GGACA | UGUAG |
+| GAACU | GUUCC |
+| AGACU | GUUCA |
+| GGACC | GUUCU |
+| UGACU | UGUGG |
+| AAACU | AGUGG |
+| GAACA | GGUCC |
+| AGACA | GUUCG |
+| AGACC | CAUAA |
+| GAACC | UAUAA |
+| UGACA | CAUCC |
+| AAACA | CUUUA |
+| UAACU | AUUUG |
+| UGACC | GAUGC |
+| UAACA | CCUCC |
+| AAACC |       |
+| UAACC |       |
 
 Here we provide a brief walkthrough of the software using a toy example.
 
