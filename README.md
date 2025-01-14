@@ -133,3 +133,8 @@ Furthermore, we have compared our results on METTL3 knock-out (KO), TRUB1 knock-
 
 - In the KO / KD scenarios, the site stoichiometries are noticeably suppressed.
 - For the OE case, the values are elevated.
+
+Data sources:
+- HEK293 METTL3-KO: https://www.ebi.ac.uk/ena/browser/view/PRJEB40872
+- HEK293 TRUB1-KD: https://www.ebi.ac.uk/ena/browser/view/PRJEB72637
+- HEK293 TRUB1-OE: courtesy of Schwartz lab (Weizmann Institute)
