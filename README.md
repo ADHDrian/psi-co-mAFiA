@@ -137,4 +137,4 @@ Furthermore, we have compared our results on METTL3 knock-out (KO), TRUB1 knock-
 Data sources:
 - HEK293 METTL3-KO: https://www.ebi.ac.uk/ena/browser/view/PRJEB40872
 - HEK293 TRUB1-KD: https://www.ebi.ac.uk/ena/browser/view/PRJEB72637
-- HEK293 TRUB1-OE: courtesy of Schwartz lab (Weizmann Institute)
+- HEK293 TRUB1-OE: RNA sample provided by the Schwartz lab (Weizmann Institute), sequenced by I. S. Naarmann-de Vries at the Dieterich lab (Heidelberg).
