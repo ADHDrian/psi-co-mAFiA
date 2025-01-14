@@ -138,3 +138,8 @@ Data sources:
 - HEK293 METTL3-KO: https://www.ebi.ac.uk/ena/browser/view/PRJEB40872
 - HEK293 TRUB1-KD: https://www.ebi.ac.uk/ena/browser/view/PRJEB72637
 - HEK293 TRUB1-OE: RNA sample provided by the Schwartz lab (Weizmann Institute), sequenced by I. S. Naarmann-de Vries at the Dieterich lab (Heidelberg).
+
+Finally, we have performed measurements on HEK293 WT-IVT mixtures. The stoichiometry of each individual site would scale according to the concentration of WT.
+
+<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/IVT_vs_GLORI_m6A_conf80_cov10.png" width="800">
+<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/IVT_vs_PRAISE_psi_conf80_cov10.png" width="800">
