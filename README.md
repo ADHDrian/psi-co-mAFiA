@@ -122,14 +122,14 @@ To limit to only one mod, give
 ## 6. Benchmarking results
 We have generated stoichiometric predictions on the HEK293 cell-line and compared the numbers with 2 chemical assays: GLORI for m<sup>6</sup>A [Liu et al, Nat Biotechnol 41, 355–366 (2023)] and PRAISE for Ψ [Zhang et al, Nat Chem Biol 19, 1185–1195 (2023)]. Each dot in the scatter plots below represents a single modified site on the human transcriptome that is predicted by both Ψ-co-mAFiA and the orthogonal method. For Ψ-co-mAFiA, there is a minimum site coverage requirement of 10 reads and minimum prediction confidence of 80%.
 
-<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/m6A_HEK293_WT_vs_GLORI_combined_conf80_cov10.png" width="500"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_HEK293_WT_vs_PRAISE_combined_conf80_cov10.png" width="500">
+<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/m6A_HEK293_WT_vs_GLORI_combined_conf80_cov10.png" width="300"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_HEK293_WT_vs_PRAISE_combined_conf80_cov10.png" width="300">
 
 - For the comparison with GLORI, there are 15928 overlapping m<sup>6</sup>A sites with correlation 0.915.
 - For PRAISE, there are 180 overlapping Ψ sites with correlation 0.938.
 
 Furthermore, we have compared our results on METTL3 knock-out (KO), TRUB1 knock-down (KD), and TRUB1 over-expressed (OE) variants of HEK293 against its wildtype (WT). METTL3 is a m<sup>6</sup>A writer, while TRUB1 is a Ψ writer for the GUUCN motif.
 
-<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/m6A_METTL3_KO_vs_HEK293_WT_combined_conf80_cov10.png" width="300"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_TRUB1_KD_vs_HEK293_WT_combined_conf80_cov10_restrict_motifs_GUUCN.png" width="300"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_TRUB1_OE_vs_HEK293_WT_combined_conf80_cov10_restrict_motifs_GUUCN.png" width="300">
+<img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/m6A_METTL3_KO_vs_HEK293_WT_combined_conf80_cov10.png" width="200"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_TRUB1_KD_vs_HEK293_WT_combined_conf80_cov10_restrict_motifs_GUUCN.png" width="200"> <img src="https://github.com/dieterich-lab/psi-co-mAFiA/blob/main/example_data/psi_TRUB1_OE_vs_HEK293_WT_combined_conf80_cov10_restrict_motifs_GUUCN.png" width="200">
 
 - In the KO / KD scenarios, the site stoichiometries are noticeably suppressed.
 - For the OE case, the values are elevated.
